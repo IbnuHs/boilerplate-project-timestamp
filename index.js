@@ -28,12 +28,6 @@ app.get("/api/:date", function (req, res) {
   let number = parseInt(date);
   let unix = /^\d+$/.test(date);
 
-  if (!date) {
-    res.json({
-      unix: new Date().getTime(),
-      utc: new Date().toUTCString(),
-    });
-  }
   if (unix) {
     let unixDate = new Date(number);
     res.json({
