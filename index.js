@@ -24,22 +24,37 @@ const isInvalidDate = (date) => {
 
 // your first API endpoint...
 app.get("/api/:date", function (req, res) {
-  let date = new Date(req.params.date);
-  if (isInvalidDate(date)) {
-    date = new Date(req.params.date);
-  }
-  if (isInvalidDate(date)) {
-    res.json({
-      error: "Invalid Date",
-    });
-    return;
-  }
-  res.json({
-    unix: date.getTime(),
-    utc: date.toUTCString(),
-  });
-});
+  let date = req.params.date;
+  let number = parseInt(date);
+  let unix = /^\d+$/.test(date);
 
+  if (!date) {
+    res.json({
+      unix: new Date().getTime(),
+      utc: new Date().toUTCString(),
+    });
+  }
+  if (unix) {
+    let unixDate = new Date(number);
+    res.json({
+      unix: parseInt(date),
+      utc: unixDate.toUTCString(),
+    });
+  }
+  if (!unix) {
+    let newDate = new Date(date);
+    let UTCdate = newDate.toUTCString();
+    if (UTCdate === "Invalid Date") {
+      res.json({
+        error: "Invalid Date",
+      });
+    }
+    res.json({
+      unix: newDate.getTime(),
+      utc: UTCdate,
+    });
+  }
+});
 app.get("/api", function (req, res) {
   // let date = new Date(req.params.unix);
   res.json({
